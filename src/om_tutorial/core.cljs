@@ -51,7 +51,27 @@
     [:person/by-name name])
   static om/IQuery
   (query [this]
-    '[:name :points]))
+    '[:name :points :age])
+  Object
+  (render [this]
+    (println "Render Person" (-> this om/props :name))
+    (let [{:keys [points name] :as props} (om/props this)]
+      (dom/li nil
+              (dom/label nil (str name ", points: " points))
+              (dom/button
+                #js {:onClick
+                     (fn [e]
+                       (om/transact! this
+                                     `[(points/increment ~props)]))}
+                "+")
+              (dom/button
+                #js {:onClick
+                     (fn [e]
+                       (om/transact! this
+                                     `[(points/decrement ~props)]))}
+                "-")))))
+
+(def person (om/factory Person {:keyfn :name}))
 
 (defui RootView
   static om/IQuery
