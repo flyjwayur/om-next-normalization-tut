@@ -73,6 +73,16 @@
 
 (def person (om/factory Person {:keyfn :name}))
 
+(defui ListView
+  Object
+  (render [this]
+    (println "Render ListView" (-> this om/path first))
+    (let [list (om/props this)]
+      (apply dom/ul nil
+             (map person list)))))
+
+(def list-view (om/factory ListView))
+
 (defui RootView
   static om/IQuery
   (query [this]
