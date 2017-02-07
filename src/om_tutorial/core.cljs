@@ -12,3 +12,17 @@
    :list/two [{:name "Mary" :points 0 :age 27}
               {:name "Gwen" :points 0}
               {:name "Jeff" :points 0}]})
+
+(defmulti read om/dispatch)
+
+(defn get-people [state key]
+  (let [st @state]
+    (into [] (map #(get-in st %)) (get st key))))
+
+(defmethod read :list/one
+  [{:keys [state] :as env} key params]
+  {:value (get-people state key)})
+
+(defmethod read :list/two
+  [{:keys [state] :as env} key params]
+  {:value (get-people state key)})
