@@ -26,3 +26,17 @@
 (defmethod read :list/two
   [{:keys [state] :as env} key params]
   {:value (get-people state key)})
+
+(defui Person
+  static om/Ident
+  (ident [this {:keys [name]}]
+    [:person/by-name name])
+  static om/IQuery
+  (query [this]
+    '[:name :points]))
+
+(defui RootView
+  static om/IQuery
+  (query [this]
+    (let [subquery (om/get-query Person)]
+      `[{:list/one ~subquery} {:list/two ~subquery}])))
