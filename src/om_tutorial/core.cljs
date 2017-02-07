@@ -87,4 +87,21 @@
   static om/IQuery
   (query [this]
     (let [subquery (om/get-query Person)]
-      `[{:list/one ~subquery} {:list/two ~subquery}])))
+      `[{:list/one ~subquery} {:list/two ~subquery}]))
+  Object
+  (render [this]
+    (println "Render RootView")
+    (let [{:keys [list/one list/two]} (om/props this)]
+      (apply dom/div nil
+             [(dom/h2 nil "List A")
+              (list-view one)
+              (dom/h2 nil "List B")
+              (list-view two)]))))
+
+(def reconciler
+  (om/reconciler
+    {:state  init-data
+     :parser (om/parser {:read read :mutate mutate})}))
+
+(om/add-root! reconciler
+              RootView (gdom/getElement "app"))
