@@ -13,6 +13,9 @@
               {:name "Gwen" :points 0}
               {:name "Jeff" :points 0}]})
 
+;; -----------------------------------------------------------------------------
+;; Parsing
+
 (defmulti read om/dispatch)
 
 (defn get-people [state key]
@@ -44,6 +47,9 @@
      (swap! state update-in
             [:person/by-name name :points]
             #(let [n (dec %)] (if (neg? n) 0 n))))})
+
+;; -----------------------------------------------------------------------------
+;; Components
 
 (defui Person
   static om/Ident
